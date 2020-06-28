@@ -1,10 +1,9 @@
 package org.alitaptap.mmsu_ns.controller;
 
-import org.alitaptap.mmsu_ns.model.StudentAccount;
 import org.alitaptap.mmsu_ns.model.payload.UserPayload;
 import org.alitaptap.mmsu_ns.service.NotificationService;
+import org.alitaptap.mmsu_ns.worker.ActiveServiceDirectory;
 import org.alitaptap.mmsu_ns.worker.ActiveUsersDirectory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,14 +13,13 @@ import static org.alitaptap.mmsu_ns.service.NotificationService.ResponseType.*;
 @RestController
 public class UserController {
 
-  @Autowired private NotificationService notify;
-
-  private ActiveUsersDirectory mUserDirectory = ActiveUsersDirectory.getInstance();
+  private final ActiveServiceDirectory mTasks = ActiveServiceDirectory.getInstance();
+  private final ActiveUsersDirectory mUsers = ActiveUsersDirectory.getInstance();
+  private NotificationService notify;
 
   @PostMapping("/new_user")
   public String newUserRequest(@RequestBody UserPayload userPayload) {
-    StudentAccount studentAccount = userPayload.getStudentAccount();
-    ActiveUsersDirectory.Response response = mUserDirectory.registerUser(studentAccount);
+    ActiveUsersDirectory.Response response = mUsers.registerUser(userPayload);
 
     switch (response) {
       case USER_EXISTING:
@@ -29,7 +27,11 @@ public class UserController {
         return "User is already existing";
       case USER_CREATED:
         notify.push(userPayload.getChatUserId(), SERVICE_USER_CREATION);
+        notify.push(userPayload.getChatUserId(), SERVICE_LOGIN_SUCCESS);
         return "User has been registered!";
+      case USER_INVALID:
+        notify.push(userPayload.getChatUserId(), SERVICE_LOGIN_FAILED);
+        return "Given account details is incorrect";
       default:
         notify.push(userPayload.getChatUserId(), SERVER_ERROR);
         return "The system encountered error.";
@@ -38,8 +40,7 @@ public class UserController {
 
   @PostMapping("/unregister_user")
   public String unregisterUser(@RequestBody UserPayload userPayload) {
-    ActiveUsersDirectory.Response response =
-        mUserDirectory.unregisterUser(userPayload.getStudentAccount());
+    ActiveUsersDirectory.Response response = mUsers.unregisterUser(userPayload);
 
     switch (response) {
       case USER_MISSING:

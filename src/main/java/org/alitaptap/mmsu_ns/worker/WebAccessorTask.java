@@ -7,27 +7,27 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.util.Map;
 
-import static org.alitaptap.mmsu_ns.service.NotificationService.ResponseType.*;
+import static org.alitaptap.mmsu_ns.service.NotificationService.ResponseType.GRADE_UPLOADED;
+import static org.alitaptap.mmsu_ns.service.NotificationService.ResponseType.SERVER_ERROR;
 
-public class WebHandlersTask {
+public class WebAccessorTask {
 
   private static final String USER_AGENT =
       "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36";
   private final UserPayload userPayload;
-  @Autowired private NotificationService notify;
+  private NotificationService notify;
   private Map<String, String> authenticatedCookies;
   private JSONArray storedGradeJson;
 
-  public WebHandlersTask(UserPayload payload) {
+  public WebAccessorTask(UserPayload payload) {
     this.userPayload = payload;
   }
 
-  public void login() {
+  public boolean login() {
     try {
       StudentAccount studentAccount = userPayload.getStudentAccount();
 
@@ -63,11 +63,12 @@ public class WebHandlersTask {
       if (authenticateForm.parse().html().length() == 357) {
         // Get the authenticated cookies
         if (authenticatedCookies == null) authenticatedCookies = authenticateForm.cookies();
-        notify.push(userPayload.getChatUserId(), SERVICE_LOGIN_SUCCESS);
-      } else notify.push(userPayload.getChatUserId(), SERVICE_LOGIN_FAILED);
+        return true;
+      }
     } catch (IOException e) {
       e.printStackTrace();
     }
+    return false;
   }
 
   public void viewGrades() {
@@ -125,5 +126,9 @@ public class WebHandlersTask {
     // Without cookies, we cannot access the grades.
     if (authenticatedCookies == null) login();
     else viewGrades();
+  }
+
+  public String getStudentId() {
+    return userPayload.getStudentAccount().getUserId();
   }
 }

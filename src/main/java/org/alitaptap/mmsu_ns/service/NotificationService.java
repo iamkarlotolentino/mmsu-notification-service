@@ -10,7 +10,7 @@ public class NotificationService {
 
   // 0 - User ID
   // 1 - Chat block name
-  private static String TRIGGER_API_URL =
+  private static final String TRIGGER_API_URL =
       "https://api.chatfuel.com/bots/5eede8d0a6ce1372e24625f0/users/%s/send?chatfuel_token=mELtlMAHYqR0BvgEiMq8zVek3uYUK3OJMbtyrdNPTrQB9ndV0fM7lWTFZbM4MZvD&chatfuel_message_tag=ACCOUNT_UPDATE&chatfuel_block_name=%s";
   private String PUSH_TRIGGER_API_URL = "TRIGGER_API_URL";
 
