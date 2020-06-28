@@ -13,7 +13,6 @@ import static org.alitaptap.mmsu_ns.service.NotificationService.ResponseType.*;
 @RestController
 public class UserController {
 
-  private final ActiveServiceDirectory mTasks = ActiveServiceDirectory.getInstance();
   private final ActiveUsersDirectory mUsers = ActiveUsersDirectory.getInstance();
   private NotificationService notify;
 
