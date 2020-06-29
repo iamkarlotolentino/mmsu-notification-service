@@ -17,6 +17,14 @@ public class ActiveServiceDirectory {
     activeServiceTasks.remove(studentId);
   }
 
+  public WebAccessorTask getServiceTask(String studentId) {
+    return activeServiceTasks.get(studentId);
+  }
+
+  public int length() {
+    return activeServiceTasks.length();
+  }
+
   /** Runs the current task and shifts to next task. */
   public void runCurrentTask() {
     activeServiceTasks.next().call();

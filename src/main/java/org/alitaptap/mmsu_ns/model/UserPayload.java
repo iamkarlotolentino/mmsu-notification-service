@@ -1,4 +1,4 @@
-package org.alitaptap.mmsu_ns.model.payload;
+package org.alitaptap.mmsu_ns.model;
 
 import org.alitaptap.mmsu_ns.model.StudentAccount;
 

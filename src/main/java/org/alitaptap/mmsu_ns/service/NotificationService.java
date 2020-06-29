@@ -1,5 +1,6 @@
 package org.alitaptap.mmsu_ns.service;
 
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.springframework.stereotype.Service;
 
@@ -34,11 +35,13 @@ public class NotificationService {
   }
 
   public enum ResponseType {
+    GRADE_FEEDBACK("grade_identify"),
     GRADE_POSTED("grade_posted"),
     GRADE_UPLOADED("grade_uploaded"),
+    GRADE_FINALIZED("grade_finalized"),
     SERVICE_LOGIN_SUCCESS("service_login_success"),
     SERVICE_LOGIN_FAILED("service_login_failed"),
-    SERVICE_USER_CREATION("service_register_user"),
+    SERVICE_USER_CREATED("service_register_user"),
     SERVICE_USER_EXISTING("service_existing_user"),
     SERVICE_USER_MISSING("service_user_missing"),
     SERVICE_USER_DELETION("service_unregister_user"),

@@ -1,7 +1,7 @@
 package org.alitaptap.mmsu_ns.worker;
 
 import org.alitaptap.mmsu_ns.model.StudentAccount;
-import org.alitaptap.mmsu_ns.model.payload.UserPayload;
+import org.alitaptap.mmsu_ns.model.UserPayload;
 
 import java.util.HashMap;
 
@@ -47,6 +47,10 @@ public class ActiveUsersDirectory {
     tasksDirectory.unregister(studentAccount.getUserId());
     userDirectoryMap.remove(studentAccount.getUserId());
     return Response.USER_REMOVED;
+  }
+
+  public boolean isRegistered(String studentId) {
+    return userDirectoryMap.containsKey(studentId);
   }
 
   public enum Response {
